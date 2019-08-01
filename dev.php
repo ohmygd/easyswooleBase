@@ -63,5 +63,15 @@ return [
         'maxIdleTime'          => 15,//最大存活时间,超出则会每$intervalCheckTime/1000秒被释放
         'maxObjectNum'         => 20,//最大创建数量
         'minObjectNum'         => 5,//最小创建数量 最小创建数量不能大于等于最大创建
+    ],
+
+    /*--- HTTP ---*/
+    'HTTP_INFO' => [
+        'mall' => [
+            'url' => 'http://dev.mall.holly.com',
+            'list' => [
+                'attributeList' => '/admin/attribute/list',
+            ]
+        ]
     ]
 ];

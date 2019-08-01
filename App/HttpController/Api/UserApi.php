@@ -9,10 +9,13 @@
 namespace App\HttpController\Api;
 
 
+use App\Dao\Http\AttributeH;
+use App\Dao\Redis\TestR;
 use App\Enum\MonthE;
 use App\Exception\PEx;
 use App\HttpController\Base;
 use App\Service\UserService;
+use EasySwoole\HttpClient\HttpClient;
 use EasySwoole\MysqliPool\Mysql;
 use EasySwoole\RedisPool\Redis;
 use EasySwoole\Validate\Validate;
@@ -63,6 +66,27 @@ class UserApi extends Base
 
         var_dump(MonthE::FEBRUARY == 2); // true
         var_dump($month->getName(), $month->getValue());
+    }
+
+    public function test8() {
+        for($i=0;$i<100;$i++) {
+            $url = "http://dev.mall.holly.com/admin/attribute/list";
+
+            $test = new HttpClient();
+            $test->setUrl($url);
+            $res = $test->get();
+        }
+
+    }
+
+    public function test9() {
+        $res = AttributeH::getInstance()->attributeList();
+
+        return $this->renderSuccData($res);
+    }
+
+    public function test10() {
+        TestR::getInstance()->name();
     }
 
     // 参数规则
