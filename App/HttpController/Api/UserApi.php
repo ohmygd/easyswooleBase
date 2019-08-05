@@ -15,10 +15,15 @@ use App\Enum\MonthE;
 use App\Exception\PEx;
 use App\HttpController\Base;
 use App\Service\UserService;
+use EasySwoole\Component\AtomicManager;
+use EasySwoole\Component\Di;
 use EasySwoole\HttpClient\HttpClient;
 use EasySwoole\MysqliPool\Mysql;
 use EasySwoole\RedisPool\Redis;
+use EasySwoole\Utility\Hash;
+use EasySwoole\Utility\Random;
 use EasySwoole\Validate\Validate;
+use Swoole\Lock;
 
 class UserApi extends Base
 {
@@ -101,5 +106,56 @@ class UserApi extends Base
             }
         }
         return $v;
+    }
+
+    public function test11() {
+        $res = TestR::getInstance()->listInsert();
+
+        return $this->renderSuccData($res);
+    }
+
+    public function test12() {
+        //todo openssl等待问题解决
+        $str = 'mc';
+        $res1 = encrypt($str);
+        var_dump($res1);
+        $res2 = decrypt($res1);
+        var_dump($res2);
+    }
+
+    public function test13() {
+        $dd = AtomicManager::getInstance()->get('second');
+        var_dump($dd->get(), '--------' . Di::getInstance()->get('workerId'));
+
+        for($i=0;$i<10;$i++) {
+            $dd->add(1);
+        }
+
+        $dd->get('second');
+        var_dump($dd->get(), '----111111111111111----' . Di::getInstance()->get('workerId'));
+
+        $dd->set(0);
+        var_dump($dd->get(), '--------' . Di::getInstance()->get('workerId'));
+    }
+
+    // hash哈希
+    public function test14() {
+        $pwd = '123456';
+
+        $hash = Hash::makePasswordHash($pwd);
+        var_dump($hash);
+
+        $res = Hash::validatePasswordHash($pwd, $hash);
+        var_dump($res);
+    }
+
+    // 随机数
+    public function test15() {
+        $a = Random::character(7);
+        $b = Random::number(4);
+        $c = Random::arrayRandOne(['a', 'b']);
+
+        var_dump($a, $b, $c);
+
     }
 }

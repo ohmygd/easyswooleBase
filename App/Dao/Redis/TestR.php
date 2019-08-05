@@ -20,6 +20,17 @@ class TestR
         return Redis::getInstance()->pool('redis')::defer();
     }
 
+    public function rpop() {
+        return $this->getConn()->rpop('mc');
+    }
+
+    public function listInsert() {
+        $conn = $this->getConn();
+        $conn->lpush('mc', 1,2,3,4,5,6,7);
+        $res = $conn->lrange('mc', 0, -1);
+        return $res;
+    }
+
     public function name() {
         $con = $this->getConn();
         $name = $con->get('name1');

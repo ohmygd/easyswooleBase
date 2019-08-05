@@ -12,9 +12,11 @@ namespace EasySwoole\EasySwoole;
 use App\Crontab\TaskOne;
 use App\Exception\ExceptionHandler;
 use App\Pool\Mysql\MysqlPool;
+use App\Process\Consumer;
 use App\Process\HotReload;
 use App\Process\Test;
 use App\Utility\TrackerManager;
+use EasySwoole\Component\AtomicManager;
 use EasySwoole\Component\Di;
 use EasySwoole\Component\Pool\PoolManager;
 use EasySwoole\EasySwoole\Crontab\Crontab;
@@ -48,6 +50,8 @@ class EasySwooleEvent implements Event
 
         $rPoolConf = Redis::getInstance()->register('redis', $r);
         $rPoolConf->setMinObjectNum(4)->setMaxObjectNum(6);
+
+        AtomicManager::getInstance()->add('second');
     }
 
     public static function mainServerCreate(EventRegister $register)
@@ -67,6 +71,17 @@ class EasySwooleEvent implements Event
 
         // 定时任务
 //        Crontab::getInstance()->addTask(TaskOne::class);
+
+
+        // 队列 自定义进程
+        //$allNum = 3;
+//        for($i=0;$i<$allNum;$i++) {
+//            ServerManager::getInstance()->getSwooleServer()->addProcess((new Consumer("consumer_{$i}"))->getProcess());
+//        }
+
+        $register->add($register::onWorkerStart,function (\swoole_server $server,int $workerId){
+            Di::getInstance()->set('workerId', $workerId);
+        });
     }
 
     public static function onRequest(Request $request, Response $response): bool

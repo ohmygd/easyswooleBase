@@ -17,7 +17,9 @@
             "App\\": "App/"
         },
         "files": [
-            "App/Pconst/Code.php"
+            "App/Pconst/Code.php",
+            "App/Util/LibUtil.php",
+            "App/Util/StringUtil.php"
         ]
     }
 }
